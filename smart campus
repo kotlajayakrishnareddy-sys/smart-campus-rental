@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Campus Rental</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI}
+body{background:#f1f5f9;padding:20px}
+.header{background:#0f172a;color:#fff;padding:20px;border-radius:12px;text-align:center}
+.inputs{background:#fff;padding:16px;border-radius:12px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inputs input{padding:10px;border:1px solid #cbd5e1;border-radius:8px;width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);cursor:pointer}
+.card img{width:100%;height:160px;object-fit:cover}
+.card-body{padding:12px}
+.price{color:#0284c7;font-weight:800;font-size:18px}
+.btn{width:100%;padding:10px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px}
+.btn-pay{background:#0284c7}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:99;padding:12px}
+.box{background:#fff;border-radius:14px;padding:20px;max-width:420px;width:100%}
+.input2{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0}
+.pay-opt{display:inline-block;border:1.5px solid #e2e8f0;padding:6px 12px;border-radius:8px;margin:4px;cursor:pointer;font-size:13px}
+.pay-opt.active{border-color:#0284c7;background:#e0f2fe}
+</style>
+</head>
+<body>
+<div class="header"><h2>🏫 Smart Campus Rental Platform</h2><p>Names + Payment + Location - Final Project</p></div>
+
+<div class="inputs">
+<input id="teamNamesInput" placeholder="Enter Names - e.g. Rahul, Priya, Arun, Sneha">
+<input id="collegeInput" placeholder="Enter College Location - e.g. MLRIT, Hyderabad">
+<input id="guideInput" placeholder="Enter Guide Name">
+<input id="userNameInput" placeholder="Enter Your Name for Booking">
+</div>
+
+<div style="background:#fff;padding:10px 16px;border-radius:12px;margin-bottom:16px;font-size:13px">
+<b>Team:</b> <span id="showTeam">Enter names above</span> | <b>Your Name:</b> <span id="showUser">-</span> | <b>Location:</b> <span id="showCollege">-</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay">
+<div class="box">
+<h3 id="dName">Laptop</h3>
+<p id="dLoc" style="font-size:12px;color:#64748b;margin:6px 0"></p>
+<img id="dImg" style="width:100%;border-radius:8px;margin:8px 0;height:140px;object-fit:cover">
+<div style="display:flex;justify-content:space-between;margin:8px 0"><span>Price:</span><b id="dPrice"></b></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0"><span>Days:</span><input type="number" id="dDays" value="1" min="1" style="width:60px;padding:6px;border-radius:6px;border:1px solid #ccc" oninput="calc()"></div>
+<div style="background:#f0f9ff;padding:8px;border-radius:8px;margin:8px 0;border:1px dashed #0284c7"><b id="dTotal" style="color:#0284c7;font-size:18px">Pay: ₹150</b></div>
+<input id="bName" class="input2" placeholder="Enter Your Full Name">
+<input id="bRoll" class="input2" placeholder="Enter Roll No">
+<p style="font-size:12px;font-weight:700;margin-top:8px">Payment Method:</p>
+<div>
+<span class="pay-opt active" onclick="pick(this,'UPI')">📱 UPI</span>
+<span class="pay-opt" onclick="pick(this,'Card')">💳 Card</span>
+<span class="pay-opt" onclick="pick(this,'Cash')">💵 Cash</span>
+</div>
+<button class="btn btn-pay" id="payBtn" onclick="pay()">Pay ₹150</button>
+<button class="btn" style="background:#e2e8f0;color:#333" onclick="document.getElementById('overlay').style.display='none'">Back</button>
+</div>
+</div>
+
+<div class="overlay" id="succ" style="display:none">
+<div class="box" style="text-align:center"><h2>✅ Paid!</h2><p id="sMsg" style="margin:12px 0;font-size:13px;line-height:1.6"></p><button class="btn" onclick="document.getElementById('succ').style.display='none';document.getElementById('overlay').style.display='none'">Done</button></div>
+</div>
+
+<script>
+const items=[
+{id:1,name:"Laptop Dell i5",price:150,loc:"📍 Admin Block, Room 101, Hyderabad",img:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500"},
+{id:2,name:"Projector",price:150,loc:"📍 ECE Block, Seminar Hall",img:"https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=500"},
+{id:3,name:"DSLR Camera",price:300,loc:"📍 CSE Block, Media Lab Room 205",img:"https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?w=500"},
+{id:4,name:"Arduino Kit",price:80,loc:"📍 IoT Lab, CSE Block",img:"https://images.unsplash.com/photo-1553406832-3c1d59ed6d06?w=500"},
+];
+let cur=null, payM='UPI';
+document.getElementById('teamNamesInput').addEventListener('input',e=>document.getElementById('showTeam').innerText=e.target.value||'Enter names above');
+document.getElementById('userNameInput').addEventListener('input',e=>{document.getElementById('showUser').innerText=e.target.value||'-'; document.getElementById('bName').value=e.target.value;});
+document.getElementById('collegeInput').addEventListener('input',e=>document.getElementById('showCollege').innerText=e.target.value||'-');
+function render(){
+document.getElementById('grid').innerHTML=items.map(i=>`
+<div class="card" onclick="openD(${i.id})">
+<img src="${i.img}">
+<div class="card-body">
+<h4>${i.name}</h4>
+<p style="font-size:11px;color:#64748b">${i.loc}</p>
+<div class="price">₹${i.price}/day - Click to Rent</div>
+</div>
+</div>`).join('');
+}
+function openD(id){
+cur=items.find(x=>x.id==id);
+document.getElementById('dName').innerText=cur.name;
+document.getElementById('dLoc').innerText=cur.loc;
+document.getElementById('dImg').src=cur.img;
+document.getElementById('dPrice').innerText='₹'+cur.price+'/day';
+document.getElementById('dDays').value=1;
+calc();
+document.getElementById('overlay').style.display='flex';
+}
+function calc(){
+let d=document.getElementById('dDays').value||1;
+document.getElementById('dTotal').innerText='Pay: ₹'+(cur.price*d);
+document.getElementById('payBtn').innerText='Pay: ₹'+(cur.price*d)+' - Pay Now';
+}
+function pick(el,m){document.querySelectorAll('.pay-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');payM=m;}
+function pay(){
+let name=document.getElementById('bName').value, roll=document.getElementById('bRoll').value;
+if(!name){alert('Enter Names - Name Required');return;}
+let days=document.getElementById('dDays').value; let total=cur.price*days;
+document.getElementById('sMsg').innerHTML=`Name: <b>${name}</b><br>Item: ${cur.name}<br>Days: ${days}<br>Location: ${cur.loc}<br><br><b style="color:#0284c7;font-size:18px">Paid: ₹${total} via ${payM}</b><br>Booking ID: SCR-${Date.now().toString().slice(-5)}`;
+document.getElementById('succ').style.display='flex';
+}
+render();
+</script>
+</body>
+</html>
