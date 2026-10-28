@@ -1,15 +1,17 @@
-
 {
-  "name": "smart-campus-rental",
+  "name": "index.html",
   "version": "1.0.0",
-  "description": "Smart Campus Rental Project",
-  "main": "server.js",
+  "description": "",
+  "main": "script.js",
   "scripts": {
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
-    "express": "^4.21.2",
-    "better-sqlite3": "^11.7.0"
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0"
   }
 }
-

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Campus Rental Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>CampusRent</h1>
+  <p>Rent Smart. Save More. Share with Students.</p>
+</header>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#items">Equipment</a>
+  <a href="#booking">Book Now</a>
+</nav>
+
+<section id="home" class="hero">
+  <h2>Welcome to Smart Campus Rental</h2>
+  <p>Rent laptops, mobile phones and calculators from fellow students.</p>
+  <a class="main-btn" href="#items">Explore Items</a>
+</section>
+
+<section id="items">
+  <h2>Available Equipment</h2>
+
+  <div class="items">
+    <article class="item">
+      <div class="emoji">💻</div>
+      <h3>Laptop</h3>
+      <p>For coding, projects and assignments</p>
+      <h3>₹200 / day</h3>
+      <button type="button" onclick="selectItem('Laptop')">Rent Laptop</button>
+    </article>
+
+    <article class="item">
+      <div class="emoji">📱</div>
+      <h3>Mobile Phone</h3>
+      <p>For study and everyday use</p>
+      <h3>₹100 / day</h3>
+      <button type="button" onclick="selectItem('Mobile Phone')">Rent Mobile</button>
+    </article>
+
+    <article class="item">
+      <div class="emoji">🧮</div>
+      <h3>Calculator</h3>
+      <p>For exams and calculations</p>
+      <h3>₹30 / day</h3>
+      <button type="button" onclick="selectItem('Calculator')">Rent Calculator</button>
+    </article>
+  </div>
+</section>
+
+<section id="booking">
+  <h2>Book Your Equipment</h2>
+
+  <form id="bookingForm">
+    <label for="ownerName">Owner Name</label>
+    <input id="ownerName" required placeholder="Enter owner name">
+
+    <label for="ownerPhone">Owner Contact Number</label>
+    <input id="ownerPhone" type="tel" required
+           pattern="[0-9]{10}" maxlength="10"
+           placeholder="10-digit mobile number">
+
+    <label for="studentName">Student Name</label>
+    <input id="studentName" required placeholder="Enter your name">
+
+    <label for="studentPhone">Student Contact Number</label>
+    <input id="studentPhone" type="tel" required
+           pattern="[0-9]{10}" maxlength="10"
+           placeholder="10-digit mobile number">
+
+    <label for="itemName">Select Item</label>
+    <select id="itemName" required>
+      <option value="">Choose equipment</option>
+      <option value="Laptop">Laptop - ₹200/day</option>
+      <option value="Mobile Phone">Mobile Phone - ₹100/day</option>
+      <option value="Calculator">Calculator - ₹30/day</option>
+    </select>
+
+    <label for="startDate">Rental Start Date</label>
+    <input id="startDate" type="date" required>
+
+    <label for="endDate">Rental Return Date</label>
+    <input id="endDate" type="date" required>
+
+    <label for="pickupLocation">Pickup Location</label>
+    <input id="pickupLocation" required placeholder="e.g. College main gate">
+
+    <label for="returnLocation">Return Location</label>
+    <input id="returnLocation" required placeholder="e.g. College library">
+
+    <h3 id="totalAmount">Estimated Total: ₹0</h3>
+
+    <label for="paymentMethod">Payment Method</label>
+    <select id="paymentMethod" required>
+      <option value="">Choose payment method</option>
+      <option value="QR">QR Code</option>
+      <option value="PhonePe">PhonePe</option>
+      <option value="UPI">UPI ID</option>
+      <option value="Cash">Cash</option>
+    </select>
+
+    <div id="paymentDetails" hidden>
+      <div id="qrOption" hidden>
+        <p>Official payment QR code will be added after payment setup.</p>
+      </div>
+
+      <div id="phonePeOption" hidden>
+        <p>PhonePe payment will be enabled after gateway integration.</p>
+      </div>
+
+      <div id="upiOption" hidden>
+        <label for="upiId">UPI ID</label>
+        <input id="upiId" placeholder="example@upi">
+        <p>Entering a UPI ID here does not make a payment.</p>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Booking Request</button>
+  </form>
+
+  <div id="message" role="status"></div>
+</section>
+
+<footer>
+  <p>© 2026 CampusRent | Student Project</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
